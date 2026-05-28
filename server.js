@@ -10,7 +10,9 @@ import {
     getAllPosts,
     createPost,
     getFavouritePosts,
-    hidePost
+    hidePost,
+    getUserRatings,
+    getCategories
 } from "./controllers/postsController.js";
 
 import {
@@ -39,9 +41,21 @@ const MIME_TYPES = {
     ".ico":  "image/x-icon",
 };
 
+const CORS_HEADERS = {
+    "Access-Control-Allow-Origin":  "*",
+    "Access-Control-Allow-Methods": "GET, POST, PUT, DELETE, OPTIONS",
+    "Access-Control-Allow-Headers": "Content-Type, Authorization",
+};
+
+function jsonResponse(data, status = 200) {
+    return Response.json(data, {
+        status,
+        headers: CORS_HEADERS
+    });
+}
+
 async function serveStaticFile(pathname) {
 
-    // Serve index.html for root path
     if (pathname === "/") {
         pathname = "/index.html";
     }
@@ -68,220 +82,163 @@ serve(async (req) => {
 
     const url = new URL(req.url);
 
+    // Handle CORS preflight
+    if (req.method === "OPTIONS") {
+        return new Response(null, { status: 204, headers: CORS_HEADERS });
+    }
+
     try {
 
-        // REGISTER
+        // ── REGISTER ────────────────────────────────────────────────────────────
 
-        if (
-            req.method === "POST" &&
-            url.pathname === "/api/auth/register"
-        ) {
+        if (req.method === "POST" && url.pathname === "/api/auth/register") {
 
             const body = await req.json();
-
             const user = await registerUser(body);
 
             if (user.error) {
-
-                return Response.json(user, {
-                    status: 400
-                });
+                return jsonResponse(user, 400);
             }
 
-            return Response.json(user, {
-                status: 201
-            });
+            return jsonResponse(user, 201);
         }
 
-        // LOGIN
+        // ── LOGIN ────────────────────────────────────────────────────────────────
 
-        if (
-            req.method === "POST" &&
-            url.pathname === "/api/auth/login"
-        ) {
+        if (req.method === "POST" && url.pathname === "/api/auth/login") {
 
             const body = await req.json();
-
             const user = await loginUser(body);
 
             if (!user) {
-
-                return Response.json({
-                    error: "Invalid credentials"
-                }, {
-                    status: 401
-                });
+                return jsonResponse({ error: "Invalid credentials" }, 401);
             }
 
             const token = await generateToken(user);
-
-            return Response.json({
-                token,
-                user
-            });
+            return jsonResponse({ token, user });
         }
 
-        // GET POSTS
+        // ── GET POSTS (optional auth for hidden-posts filtering) ─────────────────
 
-        if (
-            req.method === "GET" &&
-            url.pathname === "/api/posts"
-        ) {
+        if (req.method === "GET" && url.pathname === "/api/posts") {
 
             const sort = url.searchParams.get("sort") || "recent";
 
-            const posts = await getAllPosts(sort);
+            // Try to get user id from token (optional — guests see all)
+            const user = await authenticate(req);
+            const userId = user ? user.userId : null;
 
-            return Response.json(posts);
+            const posts = await getAllPosts(sort, userId);
+            return jsonResponse(posts);
         }
 
-        // CREATE POST
+        // ── CREATE POST ──────────────────────────────────────────────────────────
 
-        if (
-            req.method === "POST" &&
-            url.pathname === "/api/posts"
-        ) {
+        if (req.method === "POST" && url.pathname === "/api/posts") {
 
             const user = await authenticate(req);
 
             if (!user) {
-
-                return Response.json({
-                    error: "Unauthorized"
-                }, {
-                    status: 401
-                });
+                return jsonResponse({ error: "Unauthorized" }, 401);
             }
 
             const body = await req.json();
 
-            const post = await createPost(
-                body,
-                user.userId
-            );
+            if (!body.title || !body.tool_url) {
+                return jsonResponse({ error: "Title and tool URL are required" }, 400);
+            }
 
-            return Response.json(post, {
-                status: 201
-            });
+            const post = await createPost(body, user.userId);
+            return jsonResponse(post, 201);
         }
 
-        // RATE POST
+        // ── RATE POST ────────────────────────────────────────────────────────────
 
-        if (
-            req.method === "POST" &&
-            url.pathname === "/api/ratings"
-        ) {
+        if (req.method === "POST" && url.pathname === "/api/ratings") {
 
             const user = await authenticate(req);
 
             if (!user) {
-
-                return Response.json({
-                    error: "Unauthorized"
-                }, {
-                    status: 401
-                });
+                return jsonResponse({ error: "Unauthorized" }, 401);
             }
 
             const body = await req.json();
-
-            const result = await ratePost(
-                body.post_id,
-                user.userId,
-                body.is_like
-            );
+            const result = await ratePost(body.post_id, user.userId, body.is_like);
 
             if (result.error) {
-
-                return Response.json(result, {
-                    status: 400
-                });
+                return jsonResponse(result, 400);
             }
 
-            return Response.json(result);
+            return jsonResponse(result);
         }
 
-        // HIDE POST
+        // ── HIDE POST ────────────────────────────────────────────────────────────
 
-        if (
-            req.method === "POST" &&
-            url.pathname === "/api/hide"
-        ) {
+        if (req.method === "POST" && url.pathname === "/api/hide") {
 
             const user = await authenticate(req);
 
             if (!user) {
-
-                return Response.json({
-                    error: "Unauthorized"
-                }, {
-                    status: 401
-                });
+                return jsonResponse({ error: "Unauthorized" }, 401);
             }
 
             const body = await req.json();
-
-            await hidePost(
-                user.userId,
-                body.post_id
-            );
-
-            return Response.json({
-                message: "Post hidden"
-            });
+            await hidePost(user.userId, body.post_id);
+            return jsonResponse({ message: "Post hidden" });
         }
 
-        // FAVOURITES
+        // ── FAVOURITES ───────────────────────────────────────────────────────────
 
-        if (
-            req.method === "GET" &&
-            url.pathname === "/api/favourites"
-        ) {
+        if (req.method === "GET" && url.pathname === "/api/favourites") {
 
             const user = await authenticate(req);
 
             if (!user) {
-
-                return Response.json({
-                    error: "Unauthorized"
-                }, {
-                    status: 401
-                });
+                return jsonResponse({ error: "Unauthorized" }, 401);
             }
 
-            const posts = await getFavouritePosts(
-                user.userId
-            );
-
-            return Response.json(posts);
+            const posts = await getFavouritePosts(user.userId);
+            return jsonResponse(posts);
         }
 
-        // USER PROFILE
+        // ── MY RATINGS (so UI can show which posts the user already rated) ────────
 
-        if (
-            req.method === "GET" &&
-            url.pathname === "/api/profile"
-        ) {
+        if (req.method === "GET" && url.pathname === "/api/my-ratings") {
 
             const user = await authenticate(req);
 
             if (!user) {
-
-                return Response.json({
-                    error: "Unauthorized"
-                }, {
-                    status: 401
-                });
+                return jsonResponse({});
             }
 
-            const profile = await getUserProfile(
-                user.userId
-            );
-
-            return Response.json(profile);
+            const ratings = await getUserRatings(user.userId);
+            return jsonResponse(ratings);
         }
 
-        // STATIC FILES
+        // ── CATEGORIES ───────────────────────────────────────────────────────────
+
+        if (req.method === "GET" && url.pathname === "/api/categories") {
+
+            const cats = await getCategories();
+            return jsonResponse(cats);
+        }
+
+        // ── USER PROFILE ─────────────────────────────────────────────────────────
+
+        if (req.method === "GET" && url.pathname === "/api/profile") {
+
+            const user = await authenticate(req);
+
+            if (!user) {
+                return jsonResponse({ error: "Unauthorized" }, 401);
+            }
+
+            const profile = await getUserProfile(user.userId);
+            return jsonResponse(profile);
+        }
+
+        // ── STATIC FILES ─────────────────────────────────────────────────────────
+
         if (req.method === "GET") {
 
             const staticResponse = await serveStaticFile(url.pathname);
@@ -291,19 +248,13 @@ serve(async (req) => {
             }
         }
 
-        return new Response("Not Found", {
-            status: 404
-        });
+        return new Response("Not Found", { status: 404, headers: CORS_HEADERS });
 
     } catch (error) {
 
-        console.log(error);
+        console.error(error);
 
-        return Response.json({
-            error: "Internal server error"
-        }, {
-            status: 500
-        });
+        return jsonResponse({ error: "Internal server error" }, 500);
     }
 
 }, { port: PORT });

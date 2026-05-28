@@ -1,12 +1,14 @@
 import sql from "../config/database.js";
 
-export async function getAllPosts(sort = "recent") {
+export async function getAllPosts(sort = "recent", userId = null) {
 
-    let orderBy = "posts.created_at DESC";
+    const orderBy = sort === "top" ? "likes DESC, posts.created_at DESC" : "posts.created_at DESC";
 
-    if (sort === "top") {
-        orderBy = "likes DESC";
-    }
+    const hiddenFilter = userId
+        ? `AND posts.post_id NOT IN (
+               SELECT post_id FROM hidden_posts WHERE user_id = ${userId}
+           )`
+        : "";
 
     const result = await sql.unsafe(`
         SELECT
@@ -16,6 +18,7 @@ export async function getAllPosts(sort = "recent") {
             posts.tool_url,
             posts.image_url,
             posts.created_at,
+            users.user_id,
             users.username,
             users.tech_points,
             categories.name AS category,
@@ -41,8 +44,12 @@ export async function getAllPosts(sort = "recent") {
         LEFT JOIN ratings
             ON posts.post_id = ratings.post_id
 
+        WHERE 1=1
+        ${hiddenFilter}
+
         GROUP BY
             posts.post_id,
+            users.user_id,
             users.username,
             users.tech_points,
             categories.name
@@ -66,11 +73,11 @@ export async function createPost(data, userId) {
         )
         VALUES (
             ${userId},
-            ${data.category_id},
+            ${data.category_id || null},
             ${data.title},
-            ${data.description},
+            ${data.description || null},
             ${data.tool_url},
-            ${data.image_url}
+            ${data.image_url || null}
         )
         RETURNING *
     `;
@@ -82,8 +89,22 @@ export async function getFavouritePosts(userId) {
 
     return await sql`
         SELECT
-            posts.*,
-            users.username
+            posts.post_id,
+            posts.title,
+            posts.description,
+            posts.tool_url,
+            posts.image_url,
+            posts.created_at,
+            users.user_id,
+            users.username,
+            users.tech_points,
+            categories.name AS category,
+
+            COUNT(r2.rating_id)
+            FILTER (WHERE r2.is_like = true) AS likes,
+
+            COUNT(r2.rating_id)
+            FILTER (WHERE r2.is_like = false) AS dislikes
 
         FROM posts
 
@@ -93,8 +114,21 @@ export async function getFavouritePosts(userId) {
         JOIN users
             ON posts.user_id = users.user_id
 
+        LEFT JOIN categories
+            ON posts.category_id = categories.category_id
+
+        LEFT JOIN ratings r2
+            ON posts.post_id = r2.post_id
+
         WHERE ratings.user_id = ${userId}
         AND ratings.is_like = true
+
+        GROUP BY
+            posts.post_id,
+            users.user_id,
+            users.username,
+            users.tech_points,
+            categories.name
     `;
 }
 
@@ -109,5 +143,26 @@ export async function hidePost(userId, postId) {
             ${userId},
             ${postId}
         )
+        ON CONFLICT (user_id, post_id) DO NOTHING
     `;
+}
+
+export async function getUserRatings(userId) {
+
+    const result = await sql`
+        SELECT post_id, is_like
+        FROM ratings
+        WHERE user_id = ${userId}
+    `;
+
+    // Return as a map: { postId: true/false }
+    const map = {};
+    for (const row of result) {
+        map[row.post_id] = row.is_like;
+    }
+    return map;
+}
+
+export async function getCategories() {
+    return await sql`SELECT * FROM categories ORDER BY name`;
 }

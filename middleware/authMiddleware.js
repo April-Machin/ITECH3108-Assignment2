@@ -2,7 +2,13 @@ import {
     verify
 } from "djwt";
 
-const SECRET_KEY = "super_secret_key";
+const SECRET_KEY = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode("super_secret_key"),
+    { name: "HMAC", hash: "SHA-512" },
+    false,
+    ["sign", "verify"]
+);
 
 export async function authenticate(req) {
 
@@ -15,13 +21,7 @@ export async function authenticate(req) {
     const token = authHeader.split(" ")[1];
 
     try {
-
-        const payload = await verify(
-            token,
-            SECRET_KEY,
-            "HS512"
-        );
-
+        const payload = await verify(token, SECRET_KEY);    
         return payload;
 
     } catch {

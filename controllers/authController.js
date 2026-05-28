@@ -10,7 +10,13 @@ import {
     getNumericDate
 } from "djwt";
 
-const SECRET_KEY = "super_secret_key";
+const SECRET_KEY = await crypto.subtle.importKey(
+    "raw",
+    new TextEncoder().encode("super_secret_key"),
+    { name: "HMAC", hash: "SHA-512" },
+    false,
+    ["sign", "verify"]
+);
 
 export async function registerUser(data) {
 
