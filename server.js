@@ -27,15 +27,50 @@ import {
 
 const PORT = 8000;
 
+const MIME_TYPES = {
+    ".html": "text/html",
+    ".css":  "text/css",
+    ".js":   "application/javascript",
+    ".json": "application/json",
+    ".png":  "image/png",
+    ".jpg":  "image/jpeg",
+    ".jpeg": "image/jpeg",
+    ".svg":  "image/svg+xml",
+    ".ico":  "image/x-icon",
+};
+
+async function serveStaticFile(pathname) {
+
+    // Serve index.html for root path
+    if (pathname === "/") {
+        pathname = "/index.html";
+    }
+
+    const filePath = `./public${pathname}`;
+
+    try {
+
+        const file = await Deno.readFile(filePath);
+
+        const ext = pathname.substring(pathname.lastIndexOf("."));
+        const contentType = MIME_TYPES[ext] || "application/octet-stream";
+
+        return new Response(file, {
+            headers: { "Content-Type": contentType }
+        });
+
+    } catch {
+        return null;
+    }
+}
+
 serve(async (req) => {
 
     const url = new URL(req.url);
 
     try {
 
-        // =========================
         // REGISTER
-        // =========================
 
         if (
             req.method === "POST" &&
@@ -58,9 +93,7 @@ serve(async (req) => {
             });
         }
 
-        // =========================
         // LOGIN
-        // =========================
 
         if (
             req.method === "POST" &&
@@ -88,9 +121,7 @@ serve(async (req) => {
             });
         }
 
-        // =========================
         // GET POSTS
-        // =========================
 
         if (
             req.method === "GET" &&
@@ -104,9 +135,7 @@ serve(async (req) => {
             return Response.json(posts);
         }
 
-        // =========================
         // CREATE POST
-        // =========================
 
         if (
             req.method === "POST" &&
@@ -136,9 +165,7 @@ serve(async (req) => {
             });
         }
 
-        // =========================
         // RATE POST
-        // =========================
 
         if (
             req.method === "POST" &&
@@ -174,9 +201,7 @@ serve(async (req) => {
             return Response.json(result);
         }
 
-        // =========================
         // HIDE POST
-        // =========================
 
         if (
             req.method === "POST" &&
@@ -206,9 +231,7 @@ serve(async (req) => {
             });
         }
 
-        // =========================
         // FAVOURITES
-        // =========================
 
         if (
             req.method === "GET" &&
@@ -233,9 +256,7 @@ serve(async (req) => {
             return Response.json(posts);
         }
 
-        // =========================
         // USER PROFILE
-        // =========================
 
         if (
             req.method === "GET" &&
@@ -258,6 +279,16 @@ serve(async (req) => {
             );
 
             return Response.json(profile);
+        }
+
+        // STATIC FILES
+        if (req.method === "GET") {
+
+            const staticResponse = await serveStaticFile(url.pathname);
+
+            if (staticResponse) {
+                return staticResponse;
+            }
         }
 
         return new Response("Not Found", {
