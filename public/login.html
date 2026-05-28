@@ -1,0 +1,117 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign In — AI Art & Creative Tools Pals</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Fraunces:ital,wght@0,700;0,900;1,700&family=DM+Sans:ital,wght@0,300;0,400;0,500;1,300&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="./css/login.css">
+</head>
+<body>
+
+    <!-- LEFT PANEL -->
+    <div class="left-panel">
+        <div class="grid-overlay"></div>
+
+        <div class="brand">
+            <span class="brand-name">
+                <span class="brand-dot"></span>
+                AI Art & Creative Tools Pals
+            </span>
+        </div>
+
+        <div class="left-hero">
+            <h1>Discover<br><span>AI creative</span><br>tools together.</h1>
+            <p>A community of artists, musicians, and writers sharing the AI tools that are changing how they create.</p>
+        </div>
+
+        <div class="left-footer">
+            <div class="stat">
+                <span class="stat-num">6</span>
+                <span class="stat-label">Links shared</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <span class="stat-num">3</span>
+                <span class="stat-label">Members</span>
+            </div>
+            <div class="stat-divider"></div>
+            <div class="stat">
+                <span class="stat-num">11</span>
+                <span class="stat-label">Ratings</span>
+            </div>
+        </div>
+    </div>
+
+    <!-- RIGHT PANEL -->
+    <div class="right-panel">
+        <div class="form-card">
+
+            <div class="tabs">
+                <button class="tab-btn active" onclick="switchTab('login')">Sign in</button>
+                <button class="tab-btn" onclick="switchTab('register')">Create account</button>
+            </div>
+
+            <!-- LOGIN -->
+            <div id="login-section" class="form-section active">
+                <h2 class="form-heading">Welcome back.</h2>
+                <p class="form-subheading">Sign in to interact with our wonderful community.</p>
+
+                <div id="login-msg" class="msg"></div>
+
+                <div class="field">
+                    <label for="login-email">Email</label>
+                    <input type="email" id="login-email" placeholder="you@example.com" autocomplete="email">
+                </div>
+
+                <div class="field">
+                    <label for="login-password">Password</label>
+                    <input type="password" id="login-password" placeholder="••••••••" autocomplete="current-password">
+                </div>
+
+                <button class="submit-btn" id="login-btn" onclick="handleLogin()">
+                    Sign in
+                </button>
+
+                <div class="divider">
+                    <span>or</span>
+                </div>
+
+                <button class="guest-btn" onclick="continueAsGuest()">
+                    Continue as guest
+                </button>
+            </div>
+
+            <!-- REGISTER -->
+            <div id="register-section" class="form-section">
+                <h2 class="form-heading">Join the community.</h2>
+                <p class="form-subheading">Create an account to join the leading artists of the future.</p>
+
+                <div id="register-msg" class="msg"></div>
+
+                <div class="field">
+                    <label for="reg-username">Username</label>
+                    <input type="text" id="reg-username" placeholder="pixel_wizard" autocomplete="username">
+                </div>
+
+                <div class="field">
+                    <label for="reg-email">Email</label>
+                    <input type="email" id="reg-email" placeholder="you@example.com" autocomplete="email">
+                </div>
+
+                <div class="field">
+                    <label for="reg-password">Password</label>
+                    <input type="password" id="reg-password" placeholder="min. 8 characters" autocomplete="new-password">
+                </div>
+
+                <button class="submit-btn" id="register-btn" onclick="handleRegister()">
+                    Create account
+                </button>
+            </div>
+
+        </div>
+    </div>
+    <script src="/js/login.js"></script>
+</body>
+</html>
