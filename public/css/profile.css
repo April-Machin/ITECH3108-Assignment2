@@ -1,0 +1,184 @@
+/* ── BREADCRUMB (reused from favourites) ────────────────────────────────── */
+
+.fav-breadcrumb {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    font-size: 13px;
+}
+
+.breadcrumb-link {
+    color: rgba(255,255,255,0.45);
+    text-decoration: none;
+    transition: color 0.15s;
+}
+
+.breadcrumb-link:hover { color: rgba(255,255,255,0.8); }
+.breadcrumb-sep        { color: rgba(255,255,255,0.25); }
+.breadcrumb-current    { color: rgba(255,255,255,0.8); font-weight: 500; }
+
+/* ── PROFILE HERO ───────────────────────────────────────────────────────── */
+
+.profile-hero {
+    background: var(--ink);
+    border-bottom: 1px solid rgba(255,255,255,0.07);
+    padding: 52px 0 48px;
+    position: relative;
+    overflow: hidden;
+}
+
+.profile-hero::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background:
+        radial-gradient(ellipse 55% 60% at 10% 100%, rgba(92,59,255,0.3) 0%, transparent 65%),
+        radial-gradient(ellipse 40% 50% at 90% 0%,   rgba(255,92,135,0.2) 0%, transparent 65%);
+    pointer-events: none;
+}
+
+.profile-hero-inner {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 24px;
+    display: flex;
+    align-items: center;
+    gap: 36px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Avatar */
+.profile-avatar-wrap {
+    position: relative;
+    flex-shrink: 0;
+}
+
+.profile-avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 50%;
+    object-fit: cover;
+    display: block;
+    position: relative;
+    z-index: 1;
+}
+
+.profile-avatar-ring {
+    position: absolute;
+    inset: -4px;
+    border-radius: 50%;
+    background: linear-gradient(135deg, var(--accent), var(--accent2));
+    z-index: 0;
+}
+
+/* Info */
+.profile-info { flex: 1; min-width: 0; }
+
+.profile-username {
+    font-family: var(--font-head);
+    font-size: clamp(28px, 4vw, 44px);
+    font-weight: 900;
+    color: #fff;
+    letter-spacing: -0.02em;
+    line-height: 1.1;
+    margin-bottom: 4px;
+}
+
+.profile-email {
+    font-size: 14px;
+    color: rgba(255,255,255,0.4);
+    font-weight: 300;
+    margin-bottom: 10px;
+}
+
+.profile-bio {
+    font-size: 15px;
+    font-weight: 300;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.7;
+    margin-bottom: 24px;
+    max-width: 520px;
+}
+
+.profile-bio:empty { margin-bottom: 0; }
+
+/* Stats row */
+.profile-stats {
+    display: flex;
+    align-items: center;
+    gap: 20px;
+    flex-wrap: wrap;
+}
+
+.pstat {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+}
+
+.pstat-num {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 800;
+    color: #fff;
+    line-height: 1;
+}
+
+.pstat-label {
+    font-size: 11px;
+    font-weight: 400;
+    color: rgba(255,255,255,0.35);
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+}
+
+.pstat-divider {
+    width: 1px;
+    height: 32px;
+    background: rgba(255,255,255,0.1);
+    align-self: center;
+}
+
+/* Points colouring */
+.points-positive { color: #4fffb0 !important; }
+.points-negative { color: var(--accent2) !important; }
+.points-zero     { color: rgba(255,255,255,0.55) !important; }
+
+/* ── SECTION TITLE ──────────────────────────────────────────────────────── */
+
+.section-title {
+    font-family: var(--font-head);
+    font-size: 22px;
+    font-weight: 700;
+    color: var(--ink);
+    letter-spacing: -0.01em;
+}
+
+/* ── MY-POSTS CARD OVERRIDE ─────────────────────────────────────────────── */
+
+/* Show a subtle "your post" badge on each card */
+.post-card.own-post .post-author::after {
+    content: 'You';
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    text-transform: uppercase;
+    color: var(--accent);
+    background: rgba(92,59,255,0.1);
+    padding: 2px 7px;
+    border-radius: 4px;
+    margin-left: 6px;
+}
+
+/* On the profile page, disable rate/hide actions (it's your own content) */
+.post-card-footer .rate-btn  { pointer-events: none; opacity: 0.55; }
+.post-card-footer .hide-btn  { display: none; }
+
+/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+
+@media (max-width: 600px) {
+    .profile-hero-inner { flex-direction: column; align-items: flex-start; gap: 20px; }
+    .profile-avatar     { width: 76px; height: 76px; }
+    .profile-stats      { gap: 14px; }
+}

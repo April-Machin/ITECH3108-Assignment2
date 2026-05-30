@@ -766,3 +766,7 @@ input:focus, textarea:focus, select:focus {
     .modal { padding: 24px 20px; }
     .hero-strip-inner { flex-direction: column; gap: 8px; text-align: center; }
 }
+
+/* Profile link in nav */
+a.nav-user { cursor: pointer; border-radius: 8px; padding: 4px 8px; transition: background 0.15s; }
+a.nav-user:hover { background: rgba(255,255,255,0.07); }

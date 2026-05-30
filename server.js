@@ -12,7 +12,8 @@ import {
     getFavouritePosts,
     hidePost,
     getUserRatings,
-    getCategories
+    getCategories,
+    getMyPosts
 } from "./controllers/postsController.js";
 
 import {
@@ -213,6 +214,21 @@ serve(async (req) => {
 
             const ratings = await getUserRatings(user.userId);
             return jsonResponse(ratings);
+        }
+
+
+        // ── MY POSTS ─────────────────────────────────────────────────────────────
+
+        if (req.method === "GET" && url.pathname === "/api/my-posts") {
+
+            const user = await authenticate(req);
+
+            if (!user) {
+                return jsonResponse({ error: "Unauthorized" }, 401);
+            }
+
+            const posts = await getMyPosts(user.userId);
+            return jsonResponse(posts);
         }
 
         // ── CATEGORIES ───────────────────────────────────────────────────────────
