@@ -10,7 +10,6 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <header class="nav">
         <div class="nav-inner">
             <a class="nav-brand" href="/index.html">
@@ -18,21 +17,11 @@
                 AI Art &amp; Creative Tools Pals
             </a>
 
-            <div class="nav-center">
-                <div class="sort-tabs" id="sort-tabs">
-                    <button class="sort-btn active" data-sort="recent">✦ Recent</button>
-                    <button class="sort-btn" data-sort="top">▲ Top Rated</button>
-                </a>
-            </a>
-
             <div class="nav-right">
                 <a href="/favourites.html" class="nav-link auth-only hidden">❤ Favourites</a>
+                <button class="nav-btn-post auth-only hidden" id="open-post-modal">+ Post a Link</button>
 
-                <button class="nav-btn-post auth-only hidden" id="open-post-modal">
-                    + Post a Link
-                </button>
-
-                <a href="/profile.html" class="nav-user auth-only hidden" id="nav-user-info" style="text-decoration:none">
+                <a href="/profile.html" class="nav-user auth-only hidden" id="nav-user-info">
                     <img class="nav-avatar" id="nav-avatar" src="" alt="">
                     <span id="nav-username"></span>
                     <span class="nav-points" id="nav-points"></span>
@@ -44,56 +33,58 @@
         </div>
     </header>
 
-    <!-- HERO STRIP (guest only) -->
     <div class="hero-strip guest-only" id="hero-strip">
         <div class="hero-strip-inner">
             <p><strong>Discover AI creative tools</strong> — shared by artists, musicians &amp; writers.</p>
             <a href="/login.html" class="hero-cta">Join the community →</a>
-        </a>
-    </a>
+        </div>
+    </div>
 
-    <!-- MAIN -->
     <main class="feed-wrap">
 
         <div class="feed-header">
-            <div id="feed-count" class="feed-count"></a>
+            <div class="feed-header-left">
+                <div class="sort-tabs" id="sort-tabs">
+                    <button class="sort-btn active" data-sort="recent">✦ Recent</button>
+                    <button class="sort-btn" data-sort="top">▲ Top Rated</button>
+                </div>
+                <div id="feed-count" class="feed-count"></div>
+            </div>
             <div class="category-filter" id="category-filter">
                 <button class="cat-btn active" data-cat="">All</button>
-            </a>
-        </a>
+            </div>
+        </div>
 
-        <!-- POSTS GRID -->
         <div class="posts-grid" id="posts-grid">
             <div class="loading-state">
-                <div class="spinner-lg"></a>
+                <div class="spinner-lg"></div>
                 <p>Loading links…</p>
-            </a>
-        </a>
+            </div>
+        </div>
     </main>
 
-    <!-- ═══ CREATE POST MODAL ═══ -->
     <div class="modal-backdrop hidden" id="post-modal-backdrop">
         <div class="modal" id="post-modal">
             <button class="modal-close" id="close-post-modal">✕</button>
             <h2 class="modal-title">Share a Link</h2>
             <p class="modal-sub">Tell the community about an AI tool you love.</p>
 
-            <div id="post-msg" class="msg"></a>
+            <div id="post-msg" class="msg"></div>
 
             <div class="field">
                 <label for="post-title">Title *</label>
                 <input type="text" id="post-title" placeholder="Why I love Midjourney…" maxlength="255">
-            </a>
+            </div>
 
             <div class="field">
                 <label for="post-url">Tool URL *</label>
                 <input type="url" id="post-url" placeholder="https://…">
-            </a>
+            </div>
 
             <div class="field">
                 <label for="post-desc">Description</label>
                 <textarea id="post-desc" rows="4" placeholder="Tell us what makes it special…"></textarea>
-            </a>
+            </div>
 
             <div class="field-row">
                 <div class="field">
@@ -101,17 +92,16 @@
                     <select id="post-cat">
                         <option value="">— pick one —</option>
                     </select>
-                </a>
-
+                </div>
                 <div class="field">
                     <label for="post-img">Image URL (optional)</label>
                     <input type="url" id="post-img" placeholder="https://…/logo.png">
-                </a>
-            </a>
+                </div>
+            </div>
 
             <button class="submit-btn" id="post-submit-btn">Share Link</button>
-        </a>
-    </a>
+        </div>
+    </div>
 
     <script src="./js/app.js"></script>
 </body>

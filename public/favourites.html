@@ -11,37 +11,25 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <header class="nav">
         <div class="nav-inner">
             <a class="nav-brand" href="/index.html">
                 <span class="brand-dot"></span>
                 AI Art &amp; Creative Tools Pals
             </a>
-
-            <div class="nav-center">
-                <div class="fav-breadcrumb">
-                    <a href="/index.html" class="breadcrumb-link">Feed</a>
-                    <span class="breadcrumb-sep">›</span>
-                    <span class="breadcrumb-current">❤ My Favourites</span>
-                </div>
-            </div>
-
             <div class="nav-right">
-                <a href="/index.html" class="nav-link">← Back to Feed</a>
-
-                <div class="nav-user" id="nav-user-info">
+                <a href="/index.html" class="nav-link">Feed</a>
+                <a href="/favourites.html" class="nav-link nav-link-active">❤ Favourites</a>
+                <a href="/profile.html" class="nav-user" id="nav-user-info">
                     <img class="nav-avatar" id="nav-avatar" src="" alt="">
                     <span id="nav-username"></span>
                     <span class="nav-points" id="nav-points"></span>
-                </div>
-
+                </a>
                 <button class="nav-btn-logout" id="logout-btn">Sign out</button>
             </div>
         </div>
     </header>
 
-    <!-- PAGE HERO -->
     <div class="fav-hero">
         <div class="fav-hero-inner">
             <h1 class="fav-title">My <span>Favourites</span></h1>
@@ -49,12 +37,12 @@
         </div>
     </div>
 
-    <!-- MAIN -->
     <main class="feed-wrap">
         <div class="feed-header">
-            <div id="feed-count" class="feed-count"></div>
+            <div class="feed-header-left">
+                <div id="feed-count" class="feed-count"></div>
+            </div>
         </div>
-
         <div class="posts-grid" id="posts-grid">
             <div class="loading-state">
                 <div class="spinner-lg"></div>

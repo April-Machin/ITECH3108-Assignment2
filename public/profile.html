@@ -11,44 +11,38 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <header class="nav">
         <div class="nav-inner">
             <a class="nav-brand" href="/index.html">
                 <span class="brand-dot"></span>
                 AI Art &amp; Creative Tools Pals
             </a>
-
-            <div class="nav-center">
-                <div class="fav-breadcrumb">
-                    <a href="/index.html" class="breadcrumb-link">Feed</a>
-                    <span class="breadcrumb-sep">›</span>
-                    <span class="breadcrumb-current">My Profile</span>
-                </div>
-            </div>
-
             <div class="nav-right">
-                <a href="/favourites.html" class="nav-link">❤ Favourites</a>
-                <a href="/index.html" class="nav-link">← Feed</a>
-                <button class="nav-btn-logout" id="logout-btn">Sign out</button>
+                <a href="/index.html" class="nav-link">Feed</a>
+                <a href="/favourites.html" class="nav-link auth-only hidden">❤ Favourites</a>
+
+                <a href="/profile.html" class="nav-user auth-only hidden" id="nav-user-info">
+                    <img class="nav-avatar" id="nav-avatar" src="" alt="">
+                    <span id="nav-username"></span>
+                    <span class="nav-points" id="nav-points"></span>
+                </a>
+
+                <a href="/login.html" class="nav-btn-login guest-only">Sign in</a>
+                <button class="nav-btn-logout auth-only hidden" id="logout-btn">Sign out</button>
             </div>
         </div>
     </header>
 
-    <!-- PROFILE HERO -->
     <div class="profile-hero">
         <div class="profile-hero-inner">
-
             <div class="profile-avatar-wrap">
                 <img class="profile-avatar" id="profile-avatar" src="" alt="">
                 <div class="profile-avatar-ring"></div>
             </div>
-
             <div class="profile-info">
                 <h1 class="profile-username" id="profile-username">—</h1>
-                <p class="profile-email" id="profile-email">—</p>
+                <p class="profile-email" id="profile-email"></p>
                 <p class="profile-bio" id="profile-bio"></p>
-
                 <div class="profile-stats">
                     <div class="pstat">
                         <span class="pstat-num" id="stat-points">—</span>
@@ -71,21 +65,20 @@
                     </div>
                 </div>
             </div>
-
         </div>
     </div>
 
-    <!-- MY POSTS -->
     <main class="feed-wrap">
         <div class="feed-header">
-            <h2 class="section-title">My Links</h2>
-            <div id="feed-count" class="feed-count"></div>
+            <div class="feed-header-left">
+                <h2 class="section-title" id="section-title">Links</h2>
+                <div id="feed-count" class="feed-count"></div>
+            </div>
         </div>
-
         <div class="posts-grid" id="posts-grid">
             <div class="loading-state">
                 <div class="spinner-lg"></div>
-                <p>Loading your posts…</p>
+                <p>Loading posts…</p>
             </div>
         </div>
     </main>

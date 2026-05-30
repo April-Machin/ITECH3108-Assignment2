@@ -229,11 +229,11 @@ function buildCard(post, index) {
                 <a href="${escHtml(post.tool_url)}" target="_blank" rel="noopener">${escHtml(post.title)}</a>
             </h2>
             ${descHtml}
-            <div class="post-author">
+            <a class="post-author" href="/profile.html?id=${post.user_id}">
                 <img class="author-avatar" src="${avatarUrl(post.username)}" alt="">
                 <span class="author-name">${escHtml(post.username)}</span>
                 <span class="author-points">${pointsLabel(post.tech_points)}</span>
-            </div>
+            </a>
         </div>
         <div class="post-card-footer">
             ${footerHtml}
