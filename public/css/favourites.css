@@ -1,28 +1,5 @@
-/* Favourites page extras */
+/* ── FAVOURITES HERO ─────────────────────────────────────────────────────── */
 
-.fav-breadcrumb {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    font-size: 13px;
-}
-
-.breadcrumb-link {
-    color: rgba(255,255,255,0.45);
-    text-decoration: none;
-    transition: color 0.15s;
-}
-
-.breadcrumb-link:hover { color: rgba(255,255,255,0.8); }
-
-.breadcrumb-sep { color: rgba(255,255,255,0.25); }
-
-.breadcrumb-current {
-    color: rgba(255,255,255,0.8);
-    font-weight: 500;
-}
-
-/* Hero */
 .fav-hero {
     background: linear-gradient(135deg, #1a0a30 0%, #0d1020 100%);
     border-bottom: 1px solid rgba(255,92,135,0.15);
@@ -59,7 +36,6 @@
     line-height: 1.6;
 }
 
-/* On favourites page, hide rate/hide buttons — read-only view */
+/* Read-only cards on favourites page */
 .post-card-footer .rate-btn { pointer-events: none; opacity: 0.6; }
 .post-card-footer .hide-btn { display: none; }
-.post-card-footer .guest-rate-msg { display: none; }

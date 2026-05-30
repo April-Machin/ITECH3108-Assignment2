@@ -166,3 +166,48 @@ export async function getUserRatings(userId) {
 export async function getCategories() {
     return await sql`SELECT * FROM categories ORDER BY name`;
 }
+
+export async function getMyPosts(userId) {
+
+    return await sql`
+        SELECT
+            posts.post_id,
+            posts.title,
+            posts.description,
+            posts.tool_url,
+            posts.image_url,
+            posts.created_at,
+            users.user_id,
+            users.username,
+            users.tech_points,
+            categories.name AS category,
+
+            COUNT(ratings.rating_id)
+            FILTER (WHERE ratings.is_like = true)  AS likes,
+
+            COUNT(ratings.rating_id)
+            FILTER (WHERE ratings.is_like = false) AS dislikes
+
+        FROM posts
+
+        JOIN users
+            ON posts.user_id = users.user_id
+
+        LEFT JOIN categories
+            ON posts.category_id = categories.category_id
+
+        LEFT JOIN ratings
+            ON posts.post_id = ratings.post_id
+
+        WHERE posts.user_id = ${userId}
+
+        GROUP BY
+            posts.post_id,
+            users.user_id,
+            users.username,
+            users.tech_points,
+            categories.name
+
+        ORDER BY posts.created_at DESC
+    `;
+}

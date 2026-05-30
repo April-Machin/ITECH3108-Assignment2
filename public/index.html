@@ -10,7 +10,6 @@
 </head>
 <body>
 
-    <!-- NAV -->
     <header class="nav">
         <div class="nav-inner">
             <a class="nav-brand" href="/index.html">
@@ -18,25 +17,15 @@
                 AI Art &amp; Creative Tools Pals
             </a>
 
-            <div class="nav-center">
-                <div class="sort-tabs" id="sort-tabs">
-                    <button class="sort-btn active" data-sort="recent">✦ Recent</button>
-                    <button class="sort-btn" data-sort="top">▲ Top Rated</button>
-                </div>
-            </div>
-
             <div class="nav-right">
                 <a href="/favourites.html" class="nav-link auth-only hidden">❤ Favourites</a>
+                <button class="nav-btn-post auth-only hidden" id="open-post-modal">+ Post a Link</button>
 
-                <button class="nav-btn-post auth-only hidden" id="open-post-modal">
-                    + Post a Link
-                </button>
-
-                <div class="nav-user auth-only hidden" id="nav-user-info">
+                <a href="/profile.html" class="nav-user auth-only hidden" id="nav-user-info">
                     <img class="nav-avatar" id="nav-avatar" src="" alt="">
                     <span id="nav-username"></span>
                     <span class="nav-points" id="nav-points"></span>
-                </div>
+                </a>
 
                 <a href="/login.html" class="nav-btn-login guest-only">Sign in</a>
                 <button class="nav-btn-logout auth-only hidden" id="logout-btn">Sign out</button>
@@ -44,7 +33,6 @@
         </div>
     </header>
 
-    <!-- HERO STRIP (guest only) -->
     <div class="hero-strip guest-only" id="hero-strip">
         <div class="hero-strip-inner">
             <p><strong>Discover AI creative tools</strong> — shared by artists, musicians &amp; writers.</p>
@@ -52,17 +40,21 @@
         </div>
     </div>
 
-    <!-- MAIN -->
     <main class="feed-wrap">
 
         <div class="feed-header">
-            <div id="feed-count" class="feed-count"></div>
+            <div class="feed-header-left">
+                <div class="sort-tabs" id="sort-tabs">
+                    <button class="sort-btn active" data-sort="recent">✦ Recent</button>
+                    <button class="sort-btn" data-sort="top">▲ Top Rated</button>
+                </div>
+                <div id="feed-count" class="feed-count"></div>
+            </div>
             <div class="category-filter" id="category-filter">
                 <button class="cat-btn active" data-cat="">All</button>
             </div>
         </div>
 
-        <!-- POSTS GRID -->
         <div class="posts-grid" id="posts-grid">
             <div class="loading-state">
                 <div class="spinner-lg"></div>
@@ -71,7 +63,6 @@
         </div>
     </main>
 
-    <!-- ═══ CREATE POST MODAL ═══ -->
     <div class="modal-backdrop hidden" id="post-modal-backdrop">
         <div class="modal" id="post-modal">
             <button class="modal-close" id="close-post-modal">✕</button>
@@ -102,7 +93,6 @@
                         <option value="">— pick one —</option>
                     </select>
                 </div>
-
                 <div class="field">
                     <label for="post-img">Image URL (optional)</label>
                     <input type="url" id="post-img" placeholder="https://…/logo.png">
