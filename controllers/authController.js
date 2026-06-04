@@ -36,15 +36,19 @@ export async function registerUser(data) {
 
     const passwordHash = await hash(data.password);
 
+    const profileImage = `https://api.dicebear.com/7.x/pixel-art/svg?seed=${hashHex}`;
+
     const result = await sql`
         INSERT INTO users (
             username,
             email,
+            profile_image,
             password_hash
         )
         VALUES (
             ${data.username},
             ${data.email},
+            ${profileImage},
             ${passwordHash}
         )
         RETURNING user_id, username, email

@@ -230,7 +230,6 @@ function buildCard(post, index) {
             </h2>
             ${descHtml}
             <a class="post-author" href="/profile.html?id=${post.user_id}">
-            <a class="post-author" href="/profile.html?id=${post.user_id}">
                 <img class="author-avatar" src="${avatarUrl(post.username)}" alt="">
                 <span class="author-name">${escHtml(post.username)}</span>
                 <span class="author-points">${pointsLabel(post.tool_points)}</span>
