@@ -1,4 +1,4 @@
-import sql from "../config/database.js";
+import sql from "../db/database.js";
 
 export async function getAllPosts(sort = "recent", userId = null) {
 
@@ -20,7 +20,7 @@ export async function getAllPosts(sort = "recent", userId = null) {
             posts.created_at,
             users.user_id,
             users.username,
-            users.tech_points,
+            users.tool_points,
             categories.name AS category,
 
             COUNT(ratings.rating_id)
@@ -51,7 +51,7 @@ export async function getAllPosts(sort = "recent", userId = null) {
             posts.post_id,
             users.user_id,
             users.username,
-            users.tech_points,
+            users.tool_points,
             categories.name
 
         ORDER BY ${orderBy}
@@ -97,7 +97,7 @@ export async function getFavouritePosts(userId) {
             posts.created_at,
             users.user_id,
             users.username,
-            users.tech_points,
+            users.tool_points,
             categories.name AS category,
 
             COUNT(r2.rating_id)
@@ -127,7 +127,7 @@ export async function getFavouritePosts(userId) {
             posts.post_id,
             users.user_id,
             users.username,
-            users.tech_points,
+            users.tool_points,
             categories.name
     `;
 }
@@ -179,7 +179,7 @@ export async function getMyPosts(userId) {
             posts.created_at,
             users.user_id,
             users.username,
-            users.tech_points,
+            users.tool_points,
             categories.name AS category,
 
             COUNT(ratings.rating_id)
@@ -205,7 +205,7 @@ export async function getMyPosts(userId) {
             posts.post_id,
             users.user_id,
             users.username,
-            users.tech_points,
+            users.tool_points,
             categories.name
 
         ORDER BY posts.created_at DESC

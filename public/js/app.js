@@ -53,7 +53,7 @@ function initAuthUI() {
         fetch(`${API}/api/profile`, { headers: authHeaders() })
             .then(r => r.json())
             .then(p => {
-                document.getElementById("nav-points").textContent = pointsLabel(p.tech_points);
+                document.getElementById("nav-points").textContent = pointsLabel(p.tool_points);
             })
             .catch(() => {});
 
@@ -232,7 +232,7 @@ function buildCard(post, index) {
             <a class="post-author" href="/profile.html?id=${post.user_id}">
                 <img class="author-avatar" src="${avatarUrl(post.username)}" alt="">
                 <span class="author-name">${escHtml(post.username)}</span>
-                <span class="author-points">${pointsLabel(post.tech_points)}</span>
+                <span class="author-points">${pointsLabel(post.tool_points)}</span>
             </a>
         </div>
         <div class="post-card-footer">
@@ -307,7 +307,7 @@ async function ratePost(postId, isLike, card) {
         fetch(`${API}/api/profile`, { headers: authHeaders() })
             .then(r => r.json())
             .then(p => {
-                document.getElementById("nav-points").textContent = pointsLabel(p.tech_points);
+                document.getElementById("nav-points").textContent = pointsLabel(p.tool_points);
             }).catch(() => {});
 
     } catch {

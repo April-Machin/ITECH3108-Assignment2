@@ -88,7 +88,7 @@ function initNav() {
     // Fetch fresh points
     fetch(`${API}/api/profile`, { headers: authHeaders() })
         .then(r => r.json())
-        .then(p => { if (pointsEl) pointsEl.textContent = `${pointsLabel(p.tech_points)} pts`; })
+        .then(p => { if (pointsEl) pointsEl.textContent = `${pointsLabel(p.tool_points)} pts`; })
         .catch(() => {});
 
     // Show nav links that need auth
@@ -130,8 +130,8 @@ function renderProfile(profile) {
 
     const pointsNumEl = document.getElementById("stat-points");
     if (pointsNumEl) {
-        pointsNumEl.textContent = pointsLabel(profile.tech_points);
-        pointsNumEl.className   = `pstat-num ${pointsClass(profile.tech_points)}`;
+        pointsNumEl.textContent = pointsLabel(profile.tool_points);
+        pointsNumEl.className   = `pstat-num ${pointsClass(profile.tool_points)}`;
     }
 
     const joinedEl = document.getElementById("stat-joined");
@@ -180,7 +180,7 @@ function buildCard(post, index) {
             <div class="post-author">
                 <img class="author-avatar" src="${avatarUrl(post.username)}" alt="">
                 <span class="author-name">${escHtml(post.username)}</span>
-                <span class="author-points">${pointsLabel(post.tech_points)}</span>
+                <span class="author-points">${pointsLabel(post.tool_points)}</span>
             </div>
         </div>
         <div class="post-card-footer">

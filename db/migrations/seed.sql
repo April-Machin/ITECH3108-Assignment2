@@ -5,11 +5,11 @@
 --   dreamer_lux   -> HelloWorld789!
 
 -- Clear existing data
-TRUNCATE TABLE saved_posts, ratings, comments, friendships, posts, categories, users
+TRUNCATE TABLE saved_posts, ratings, comments, posts, categories, users
   RESTART IDENTITY CASCADE;
 
 -- Users
-INSERT INTO users (username, email, password_hash, bio, profile_image, tech_points) VALUES
+INSERT INTO users (username, email, password_hash, bio, profile_image, tool_points) VALUES
 (
   'nova_spark',
   'nova@example.com',
@@ -119,11 +119,11 @@ SELECT
   posts.post_id,
   posts.title,
   users.username                                         AS posted_by,
-  users.tech_points,
+  users.tool_points,
   COUNT(*) FILTER (WHERE ratings.is_like = TRUE)         AS likes,
   COUNT(*) FILTER (WHERE ratings.is_like = FALSE)        AS dislikes
 FROM posts
 JOIN users ON posts.user_id = users.user_id
 LEFT JOIN ratings ON posts.post_id = ratings.post_id
-GROUP BY posts.post_id, posts.title, users.username, users.tech_points
+GROUP BY posts.post_id, posts.title, users.username, users.tool_points
 ORDER BY posts.post_id;

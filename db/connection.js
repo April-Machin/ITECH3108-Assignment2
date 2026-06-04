@@ -1,4 +1,4 @@
-import sql from "../config/database.js";
+import sql from "./database.js";
 
 try {
     const result = await sql`SELECT NOW()`;

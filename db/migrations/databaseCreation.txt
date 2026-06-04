@@ -17,7 +17,7 @@ CREATE TABLE users (
     password_hash TEXT NOT NULL,
     bio TEXT,
     profile_image TEXT,
-    tech_points INTEGER DEFAULT 0,
+    tool_points INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -60,17 +60,6 @@ CREATE TABLE ratings (
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
-CREATE TABLE friendships (
-    friendship_id SERIAL PRIMARY KEY,
-    requester_id INTEGER NOT NULL,
-    addressee_id INTEGER NOT NULL,
-    status VARCHAR(20)  CHECK (status IN ('pending', 'accepted', 'blocked'))  DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(requester_id, addressee_id),
-    FOREIGN KEY (requester_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (addressee_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
 CREATE TABLE saved_posts (
     saved_post_id SERIAL PRIMARY KEY,
     user_id INTEGER NOT NULL,
@@ -81,6 +70,17 @@ CREATE TABLE saved_posts (
     FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
 );
 
+CREATE TABLE hidden_posts (
+    hidden_post_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    UNIQUE(user_id, post_id),
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
+    FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
+);
+
+
 SEED
 -- Seed data for ITECH3108_30438140_a2
 -- Passwords hashed with bcrypt (cost factor 10)
@@ -89,11 +89,11 @@ SEED
 --   dreamer_lux   -> HelloWorld789!
 
 -- Clear existing data
-TRUNCATE TABLE saved_posts, ratings, comments, friendships, posts, categories, users
+TRUNCATE TABLE saved_posts, ratings, comments, posts, categories, users
   RESTART IDENTITY CASCADE;
 
 -- Users
-INSERT INTO users (username, email, password_hash, bio, profile_image, tech_points) VALUES
+INSERT INTO users (username, email, password_hash, bio, profile_image, tool_points) VALUES
 (
   'nova_spark',
   'nova@example.com',
@@ -192,16 +192,22 @@ INSERT INTO ratings (post_id, user_id, is_like) VALUES
 (5, 3, FALSE);
 -- Post 6 (Meshy AI) — no ratings (unrated)
 
+--Hidden Posts
+INSERT INTO hidden_posts (user_id, post_id) VALUES
+(3, 3),
+(1, 2),
+(2, 4);
+
 -- Verify
 SELECT
   posts.post_id,
   posts.title,
   users.username                                         AS posted_by,
-  users.tech_points,
+  users.tool_points,
   COUNT(*) FILTER (WHERE ratings.is_like = TRUE)         AS likes,
   COUNT(*) FILTER (WHERE ratings.is_like = FALSE)        AS dislikes
 FROM posts
 JOIN users ON posts.user_id = users.user_id
 LEFT JOIN ratings ON posts.post_id = ratings.post_id
-GROUP BY posts.post_id, posts.title, users.username, users.tech_points
+GROUP BY posts.post_id, posts.title, users.username, users.tool_points
 ORDER BY posts.post_id;

@@ -1,4 +1,4 @@
-import sql from "../config/database.js";
+import sql from "../db/database.js";
 
 export async function ratePost(
     postId,
@@ -45,7 +45,7 @@ export async function ratePost(
 
         await sql`
             UPDATE users
-            SET tech_points = tech_points + 1
+            SET tool_points = tool_points + 1
             WHERE user_id = ${ownerId}
         `;
 
@@ -53,7 +53,7 @@ export async function ratePost(
 
         await sql`
             UPDATE users
-            SET tech_points = tech_points - 1
+            SET tool_points = tool_points - 1
             WHERE user_id = ${ownerId}
         `;
     }

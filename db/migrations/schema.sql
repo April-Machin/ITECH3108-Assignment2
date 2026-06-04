@@ -5,7 +5,7 @@ CREATE TABLE users (
     password_hash TEXT NOT NULL,
     bio TEXT,
     profile_image TEXT,
-    tech_points INTEGER DEFAULT 0,
+    tool_points INTEGER DEFAULT 0,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
@@ -46,17 +46,6 @@ CREATE TABLE ratings (
     UNIQUE(post_id, user_id),
     FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
-CREATE TABLE friendships (
-    friendship_id SERIAL PRIMARY KEY,
-    requester_id INTEGER NOT NULL,
-    addressee_id INTEGER NOT NULL,
-    status VARCHAR(20)  CHECK (status IN ('pending', 'accepted', 'blocked'))  DEFAULT 'pending',
-    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    UNIQUE(requester_id, addressee_id),
-    FOREIGN KEY (requester_id) REFERENCES users(user_id) ON DELETE CASCADE,
-    FOREIGN KEY (addressee_id) REFERENCES users(user_id) ON DELETE CASCADE
 );
 
 CREATE TABLE saved_posts (

@@ -1,4 +1,4 @@
-import sql from "../config/database.js";
+import sql from "../db/database.js";
 
 export async function getUserProfile(userId) {
 
@@ -9,7 +9,7 @@ export async function getUserProfile(userId) {
             email,
             bio,
             profile_image,
-            tech_points,
+            tool_points,
             created_at
         FROM users
         WHERE user_id = ${userId}
@@ -27,7 +27,7 @@ export async function getPublicProfile(userId) {
             username,
             bio,
             profile_image,
-            tech_points,
+            tool_points,
             created_at
         FROM users
         WHERE user_id = ${userId}
