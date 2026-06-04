@@ -1,6 +1,4 @@
-/* ═══════════════════════════════════════════════════════════════════════════
-   profile.js — handles both /profile.html (own) and /profile.html?id=X (other)
-   ═══════════════════════════════════════════════════════════════════════════ */
+// profile.js — handles both /profile.html (own) and /profile.html?id=X (other)
 
 const API   = "";
 const token = localStorage.getItem("token");
@@ -17,8 +15,7 @@ if (!targetId && (!token || !user)) {
     window.location.href = "/login.html";
 }
 
-/* ── HELPERS ─────────────────────────────────────────────────────────────── */
-
+// Helpers
 function authHeaders() {
     return token
         ? { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
@@ -62,8 +59,6 @@ function escHtml(str) {
         .replace(/"/g, "&quot;");
 }
 
-/* ── NAV — populate immediately from localStorage ────────────────────────── */
-
 function initNav() {
     if (!user) return;
 
@@ -95,8 +90,6 @@ function initNav() {
     document.querySelectorAll(".auth-only").forEach(el => el.classList.remove("hidden"));
     document.querySelectorAll(".guest-only").forEach(el => el.classList.add("hidden"));
 }
-
-/* ── RENDER PROFILE HERO ─────────────────────────────────────────────────── */
 
 function renderProfile(profile) {
 
@@ -146,8 +139,7 @@ function renderProfile(profile) {
     }
 }
 
-/* ── BUILD POST CARD ─────────────────────────────────────────────────────── */
-
+// Creates the card which contains info for a post
 function buildCard(post, index) {
 
     const card = document.createElement("div");
@@ -197,9 +189,7 @@ function buildCard(post, index) {
     return card;
 }
 
-/* ── RENDER POSTS ────────────────────────────────────────────────────────── */
-
-function renderPosts(posts) {
+function displayPosts(posts) {
 
     const grid  = document.getElementById("posts-grid");
     const count = document.getElementById("feed-count");
@@ -213,6 +203,7 @@ function renderPosts(posts) {
 
     if (count) count.textContent = `${posts.length} link${posts.length !== 1 ? "s" : ""} shared`;
 
+    // If no posts, show empty state (different message if own profile vs someone else's)
     if (!posts.length) {
         grid.innerHTML = `
             <div class="empty-state">
@@ -229,7 +220,7 @@ function renderPosts(posts) {
     posts.forEach((post, i) => grid.appendChild(buildCard(post, i)));
 }
 
-/* ── LOAD DATA ───────────────────────────────────────────────────────────── */
+// LOAD DATA
 
 async function loadProfile() {
 
@@ -271,7 +262,7 @@ async function loadProfile() {
         }
 
         renderProfile(profile);
-        renderPosts(posts);
+        displayPosts(posts);
 
     } catch {
         document.getElementById("posts-grid").innerHTML = `
