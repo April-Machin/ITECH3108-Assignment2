@@ -1,4 +1,5 @@
 const API = "";          // same origin
+const API = "";          // same origin
 const token = localStorage.getItem("token");
 const user  = JSON.parse(localStorage.getItem("user") || "null");
 
@@ -6,8 +7,23 @@ let currentSort     = "recent";
 let currentCategory = "";
 let allPosts        = [];
 let myRatings       = {};   // { post_id: true/false }
+let currentSort     = "recent";
+let currentCategory = "";
+let allPosts        = [];
+let myRatings       = {};   // { post_id: true/false }
 
 function authHeaders() {
+    return token
+        ? { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
+        : { "Content-Type": "application/json" };
+}
+
+function toast(msg, type = "default") {
+    const el = document.createElement("div");
+    el.className = `toast ${type}`;
+    el.textContent = msg;
+    document.body.appendChild(el);
+    setTimeout(() => el.remove(), 3000);
     return token
         ? { "Content-Type": "application/json", "Authorization": `Bearer ${token}` }
         : { "Content-Type": "application/json" };
@@ -36,8 +52,19 @@ function pointsLabel(n) {
 }
 
 /* ── AUTH UI SETUP ───────────────────────────────────────────────────────── */
+/* ── AUTH UI SETUP ───────────────────────────────────────────────────────── */
 
 function initAuthUI() {
+
+    const authEls  = document.querySelectorAll(".auth-only");
+    const guestEls = document.querySelectorAll(".guest-only");
+
+    if (user) {
+        authEls.forEach(el  => el.classList.remove("hidden"));
+        guestEls.forEach(el => el.classList.add("hidden"));
+
+        document.getElementById("nav-username").textContent = user.username;
+        document.getElementById("nav-avatar").src = avatarUrl(user.username);
 
     const authEls  = document.querySelectorAll(".auth-only");
     const guestEls = document.querySelectorAll(".guest-only");
@@ -164,25 +191,66 @@ function buildCard(post, index) {
     const myRating = myRatings[post.post_id]; // true=liked, false=disliked, undefined=unrated
     const isOwner  = user && Number(user.user_id) === Number(post.user_id);
 
+    const myRating = myRatings[post.post_id]; // true=liked, false=disliked, undefined=unrated
+    const isOwner  = user && Number(user.user_id) === Number(post.user_id);
+
     const card = document.createElement("div");
     card.className = "post-card";
     card.style.animationDelay = `${index * 40}ms`;
     card.dataset.postId = post.post_id;
+    card.dataset.postId = post.post_id;
 
+    // Image
     // Image
     const imgHtml = post.image_url
         ? `<img class="post-card-image" src="${escHtml(post.image_url)}" alt="" loading="lazy" onerror="this.style.display='none'">`
         : "";
 
     // Category badge
+    // Category badge
     const catHtml = post.category
         ? `<span class="post-category">${escHtml(post.category)}</span>`
         : "";
 
     // Description
+    // Description
     const descHtml = post.description
         ? `<p class="post-desc">${escHtml(post.description)}</p>`
         : "";
+
+    // Rating area
+    let footerHtml;
+
+    if (user) {
+        const alreadyRated = myRating !== undefined;
+        const likedClass   = myRating === true  ? "rate-btn liked"    : "rate-btn";
+        const dislikeCls   = myRating === false ? "rate-btn disliked" : "rate-btn";
+        const disabled     = (alreadyRated || isOwner) ? "disabled" : "";
+        const likeTitle    = isOwner ? "Can't rate your own post" : alreadyRated ? "Already rated" : "Like";
+        const dislikeTitle = isOwner ? "Can't rate your own post" : alreadyRated ? "Already rated" : "Dislike";
+
+        footerHtml = `
+            <div class="rating-group">
+                <button class="${likedClass}" data-action="like" title="${likeTitle}" ${disabled}>
+                    👍 <span class="count">${post.likes}</span>
+                </button>
+                <button class="${dislikeCls}" data-action="dislike" title="${dislikeTitle}" ${disabled}>
+                    👎 <span class="count">${post.dislikes}</span>
+                </button>
+            </div>
+            <button class="hide-btn" data-action="hide" title="Hide this post">🙈</button>`;
+    } else {
+        footerHtml = `
+            <div class="rating-group">
+                <button class="rate-btn" disabled title="Sign in to rate">
+                    👍 <span class="count">${post.likes}</span>
+                </button>
+                <button class="rate-btn" disabled title="Sign in to rate">
+                    👎 <span class="count">${post.dislikes}</span>
+                </button>
+            </div>
+            <span class="guest-rate-msg"><a href="/login.html">Sign in</a> to rate</span>`;
+    }
 
     // Rating area
     let footerHtml;
@@ -230,6 +298,7 @@ function buildCard(post, index) {
             </h2>
             ${descHtml}
             <a class="post-author" href="/profile.html?id=${post.user_id}">
+            <a class="post-author" href="/profile.html?id=${post.user_id}">
                 <img class="author-avatar" src="${avatarUrl(post.username)}" alt="">
                 <span class="author-name">${escHtml(post.username)}</span>
                 <span class="author-points">${pointsLabel(post.tool_points)}</span>
@@ -237,7 +306,13 @@ function buildCard(post, index) {
         </div>
         <div class="post-card-footer">
             ${footerHtml}
+            ${footerHtml}
         </div>`;
+
+    // Wire up events
+    card.querySelector("[data-action='like']")?.addEventListener("click", () => ratePost(post.post_id, true, card));
+    card.querySelector("[data-action='dislike']")?.addEventListener("click", () => ratePost(post.post_id, false, card));
+    card.querySelector("[data-action='hide']")?.addEventListener("click", () => hidePost(post.post_id, card));
 
     // Wire up events
     card.querySelector("[data-action='like']")?.addEventListener("click", () => ratePost(post.post_id, true, card));
@@ -278,8 +353,56 @@ async function ratePost(postId, isLike, card) {
 
     likeBtn.disabled    = true;
     dislikeBtn.disabled = true;
+function escHtml(str) {
+    if (!str) return "";
+    return String(str)
+        .replace(/&/g, "&amp;")
+        .replace(/</g, "&lt;")
+        .replace(/>/g, "&gt;")
+        .replace(/"/g, "&quot;");
+}
+
+//RATINGS
+async function ratePost(postId, isLike, card) {
+
+    if (!token) { window.location.href = "/login.html"; return; }
+
+    const likeBtn    = card.querySelector("[data-action='like']");
+    const dislikeBtn = card.querySelector("[data-action='dislike']");
+
+    // Optimistic UI
+    const oldLikes    = Number(likeBtn.querySelector(".count").textContent);
+    const oldDislikes = Number(dislikeBtn.querySelector(".count").textContent);
+
+    if (isLike) {
+        likeBtn.querySelector(".count").textContent = oldLikes + 1;
+        likeBtn.classList.add("liked");
+    } else {
+        dislikeBtn.querySelector(".count").textContent = oldDislikes + 1;
+        dislikeBtn.classList.add("disliked");
+    }
+
+    likeBtn.disabled    = true;
+    dislikeBtn.disabled = true;
 
     try {
+        const res = await fetch(`${API}/api/ratings`, {
+            method: "POST",
+            headers: authHeaders(),
+            body: JSON.stringify({ post_id: postId, is_like: isLike })
+        });
+
+        const data = await res.json();
+
+        if (!res.ok) {
+            // Revert optimistic update
+            likeBtn.querySelector(".count").textContent    = oldLikes;
+            dislikeBtn.querySelector(".count").textContent = oldDislikes;
+            likeBtn.classList.remove("liked");
+            dislikeBtn.classList.remove("disliked");
+            likeBtn.disabled    = false;
+            dislikeBtn.disabled = false;
+            toast(data.error || "Could not rate post", "error");
         const res = await fetch(`${API}/api/ratings`, {
             method: "POST",
             headers: authHeaders(),
@@ -461,6 +584,24 @@ function initSortTabs() {
             loadPosts();
         });
     });
+        showPostMsg("Network error — please try again.", "error");
+    } finally {
+        btn.disabled    = false;
+        btn.textContent = "Share Link";
+    }
+}
+
+//SORT
+
+function initSortTabs() {
+    document.querySelectorAll(".sort-btn").forEach(btn => {
+        btn.addEventListener("click", () => {
+            currentSort = btn.dataset.sort;
+            document.querySelectorAll(".sort-btn").forEach(b => b.classList.remove("active"));
+            btn.classList.add("active");
+            loadPosts();
+        });
+    });
 }
 
 //LOGOUT
@@ -486,11 +627,33 @@ document.getElementById("post-submit-btn")?.addEventListener("click", submitPost
 
 document.addEventListener("keydown", (e) => {
     if (e.key === "Escape") closePostModal();
+    window.location.reload();
+});
+
+//POST MODAL EVENTS
+
+document.getElementById("open-post-modal")?.addEventListener("click", openPostModal);
+document.getElementById("close-post-modal")?.addEventListener("click", closePostModal);
+
+document.getElementById("post-modal-backdrop")?.addEventListener("click", (e) => {
+    if (e.target === document.getElementById("post-modal-backdrop")) {
+        closePostModal();
+    }
+});
+
+document.getElementById("post-submit-btn")?.addEventListener("click", submitPost);
+
+document.addEventListener("keydown", (e) => {
+    if (e.key === "Escape") closePostModal();
 });
 
 //INIT
 
 initAuthUI();
+initSortTabs();
+loadCategories();
+loadCategoriesForModal();
+loadPosts();
 initSortTabs();
 loadCategories();
 loadCategoriesForModal();
