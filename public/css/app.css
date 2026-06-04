@@ -387,6 +387,7 @@ body {
     color: var(--ink-mid);
     display: -webkit-box;
     -webkit-line-clamp: 3;
+    line-clamp: 3;
     -webkit-box-orient: vertical;
     overflow: hidden;
     margin-bottom: 16px;
@@ -424,7 +425,7 @@ a.post-author:hover .author-name { color: var(--accent); }
     gap: 4px;
 }
 
-.author-points::before { content: '⚡'; font-size: 10px; }
+.author-points::before { content: '🛠'; font-size: 18px; }
 
 .post-card-footer {
     padding: 12px 20px;
