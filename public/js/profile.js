@@ -112,15 +112,6 @@ function renderProfile(profile) {
         }
     }
 
-    const bioEl = document.getElementById("profile-bio");
-    if (bioEl) {
-        if (profile.bio) {
-            bioEl.textContent = profile.bio;
-        } else {
-            bioEl.style.display = "none";
-        }
-    }
-
     const pointsNumEl = document.getElementById("stat-points");
     if (pointsNumEl) {
         pointsNumEl.textContent = pointsLabel(profile.tool_points);
@@ -130,12 +121,12 @@ function renderProfile(profile) {
     const joinedEl = document.getElementById("stat-joined");
     if (joinedEl) joinedEl.textContent = formatJoined(profile.created_at);
 
-    // Show/hide "My Links" vs "their links" label
+    // Show/hide "My Posts" vs "Their Posts" label
     const sectionTitle = document.getElementById("section-title");
     if (sectionTitle) {
         sectionTitle.textContent = isOwnProfile
-            ? "My Links"
-            : `${profile.username}'s Links`;
+            ? "My Posts"
+            : `${profile.username}'s Posts`;
     }
 }
 
@@ -207,10 +198,10 @@ function displayPosts(posts) {
     if (!posts.length) {
         grid.innerHTML = `
             <div class="empty-state">
-                <h3>No links shared yet.</h3>
+                <h3>No posts yet.</h3>
                 <p>${isOwnProfile
-                    ? 'Head to the <a href="/index.html">feed</a> and share your first AI tool.'
-                    : "This member hasn't shared any links yet."
+                    ? 'Head to the <a href="/index.html">feed</a> and share your first AI tool expirence.'
+                    : "This member hasn't created any posts yet."
                 }</p>
             </div>`;
         return;
@@ -220,15 +211,13 @@ function displayPosts(posts) {
     posts.forEach((post, i) => grid.appendChild(buildCard(post, i)));
 }
 
-// LOAD DATA
-
 async function loadProfile() {
 
     try {
         let profile, posts;
 
         if (isOwnProfile) {
-            // Own profile — uses authenticated endpoints
+            // Own profile — authenticated endpoints
             const [profileRes, postsRes] = await Promise.all([
                 fetch(`${API}/api/profile`,  { headers: authHeaders() }),
                 fetch(`${API}/api/my-posts`, { headers: authHeaders() })
@@ -273,7 +262,7 @@ async function loadProfile() {
     }
 }
 
-/* ── LOGOUT ──────────────────────────────────────────────────────────────── */
+// Logout
 
 document.getElementById("logout-btn")?.addEventListener("click", () => {
     localStorage.removeItem("token");
@@ -281,7 +270,7 @@ document.getElementById("logout-btn")?.addEventListener("click", () => {
     window.location.href = "/login.html";
 });
 
-/* ── INIT ────────────────────────────────────────────────────────────────── */
+// Init 
 
 initNav();
 loadProfile();

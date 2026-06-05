@@ -312,7 +312,7 @@ body {
     gap: 20px;
 }
 
-/* ── POST CARD ───────────────────────────────────────────────────────────── */
+/* Post Card */
 
 .post-card {
     background: var(--card);

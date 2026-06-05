@@ -7,7 +7,6 @@ export async function getUserProfile(userId) {
             user_id,
             username,
             email,
-            bio,
             profile_image,
             tool_points,
             created_at
@@ -25,7 +24,6 @@ export async function getPublicProfile(userId) {
         SELECT
             user_id,
             username,
-            bio,
             profile_image,
             tool_points,
             created_at

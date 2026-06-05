@@ -17,49 +17,38 @@ GRANT ALL ON SCHEMA public TO itech3108;
 -- SCHEMA 
 
 CREATE TABLE users (
-    user_id       SERIAL PRIMARY KEY,
-    username      VARCHAR(50)  UNIQUE NOT NULL,
-    email         VARCHAR(255) UNIQUE NOT NULL,
+    user_id SERIAL PRIMARY KEY,
+    username VARCHAR(50) UNIQUE NOT NULL,
+    email VARCHAR(255) UNIQUE NOT NULL,
     password_hash TEXT NOT NULL,
-    bio           TEXT,
     profile_image TEXT,
-    tool_points   INTEGER DEFAULT 0,
-    created_at    TIMESTAMP DEFAULT CURRENT_TIMESTAMP
+    tool_points INTEGER DEFAULT 0,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
 );
 
 CREATE TABLE categories (
     category_id SERIAL PRIMARY KEY,
-    name        VARCHAR(100) UNIQUE NOT NULL
+    name VARCHAR(100) UNIQUE NOT NULL
 );
 
 CREATE TABLE posts (
-    post_id     SERIAL PRIMARY KEY,
-    user_id     INTEGER NOT NULL,
+    post_id SERIAL PRIMARY KEY,
+    user_id INTEGER NOT NULL,
     category_id INTEGER,
-    title       VARCHAR(255) NOT NULL,
+    title VARCHAR(255) NOT NULL,
     description TEXT,
-    tool_url    TEXT NOT NULL,
-    image_url   TEXT,
-    created_at  TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (user_id)     REFERENCES users(user_id)      ON DELETE CASCADE,
+    tool_url TEXT NOT NULL,
+    image_url TEXT,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (category_id) REFERENCES categories(category_id) ON DELETE SET NULL
 );
 
-CREATE TABLE comments (
-    comment_id   SERIAL PRIMARY KEY,
-    post_id      INTEGER NOT NULL,
-    user_id      INTEGER NOT NULL,
-    comment_text TEXT NOT NULL,
-    created_at   TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
-    FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
-    FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE
-);
-
 CREATE TABLE ratings (
-    rating_id  SERIAL PRIMARY KEY,
-    post_id    INTEGER NOT NULL,
-    user_id    INTEGER NOT NULL,
-    is_like    BOOLEAN NOT NULL,
+    rating_id SERIAL PRIMARY KEY,
+    post_id INTEGER NOT NULL,
+    user_id INTEGER NOT NULL,
+    is_like BOOLEAN NOT NULL,
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(post_id, user_id),
     FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE,
@@ -68,9 +57,9 @@ CREATE TABLE ratings (
 
 CREATE TABLE hidden_posts (
     hidden_post_id SERIAL PRIMARY KEY,
-    user_id        INTEGER NOT NULL,
-    post_id        INTEGER NOT NULL,
-    created_at     TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+    user_id INTEGER NOT NULL,
+    post_id INTEGER NOT NULL,
+    created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
     UNIQUE(user_id, post_id),
     FOREIGN KEY (user_id) REFERENCES users(user_id) ON DELETE CASCADE,
     FOREIGN KEY (post_id) REFERENCES posts(post_id) ON DELETE CASCADE
@@ -87,30 +76,27 @@ GRANT ALL PRIVILEGES ON ALL SEQUENCES IN SCHEMA public TO itech3108;
 --   dreamer_lux  → HelloWorld789!
 
 -- Users
-INSERT INTO users (username, email, password_hash, bio, profile_image, tool_points) VALUES
+INSERT INTO users (username, email, password_hash, profile_image, tool_points) VALUES
 (
-    'nova_spark',
-    'nova@example.com',
-    '$2b$10$/zgivyTxH910CGYupdLCCuqa3FkmxDQ/rlqZmLHHqWB1FzTo0lg5W',
-    'Digital artist obsessed with generative AI and weird textures.',
-    'https://api.dicebear.com/7.x/pixel-art/svg?seed=nova_spark',
-    5
+  'nova_spark',
+  'nova@example.com',
+  '$2b$10$/zgivyTxH910CGYupdLCCuqa3FkmxDQ/rlqZmLHHqWB1FzTo0lg5W',
+  'https://api.dicebear.com/7.x/pixel-art/svg?seed=nova_spark',
+  5
 ),
 (
-    'pixel_kai',
-    'kai@example.com',
-    '$2b$10$6ZxyFEk70ZWm/bhoO1UalO7Jkin0MI/OR6Kmw8shtHedbdEgL5xIi',
-    'Musician and sound designer exploring AI audio tools.',
-    'https://api.dicebear.com/7.x/pixel-art/svg?seed=pixel_kai',
-    -2
+  'pixel_kai',
+  'kai@example.com',
+  '$2b$10$6ZxyFEk70ZWm/bhoO1UalO7Jkin0MI/OR6Kmw8shtHedbdEgL5xIi',
+  'https://api.dicebear.com/7.x/pixel-art/svg?seed=pixel_kai',
+  -2
 ),
 (
-    'dreamer_lux',
-    'lux@example.com',
-    '$2b$10$pcP1G0JN7abTedu.Fk8f/us2EHBzuXsTTRXT61pZakIYW2kPU97wW',
-    'Writer and world-builder using AI to bring ideas to life.',
-    'https://api.dicebear.com/7.x/pixel-art/svg?seed=dreamer_lux',
-    0
+  'dreamer_lux',
+  'lux@example.com',
+  '$2b$10$pcP1G0JN7abTedu.Fk8f/us2EHBzuXsTTRXT61pZakIYW2kPU97wW',
+  'https://api.dicebear.com/7.x/pixel-art/svg?seed=dreamer_lux',
+  0
 );
 
 -- Categories

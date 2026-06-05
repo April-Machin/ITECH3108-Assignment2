@@ -5,16 +5,15 @@
 --   dreamer_lux   -> HelloWorld789!
 
 -- Clear existing data
-TRUNCATE TABLE saved_posts, ratings, comments, posts, categories, users
+TRUNCATE TABLE ratings, posts, categories, users
   RESTART IDENTITY CASCADE;
 
 -- Users
-INSERT INTO users (username, email, password_hash, bio, profile_image, tool_points) VALUES
+INSERT INTO users (username, email, password_hash, profile_image, tool_points) VALUES
 (
   'nova_spark',
   'nova@example.com',
   '$2b$10$/zgivyTxH910CGYupdLCCuqa3FkmxDQ/rlqZmLHHqWB1FzTo0lg5W',
-  'Digital artist obsessed with generative AI and weird textures.',
   'https://api.dicebear.com/7.x/pixel-art/svg?seed=nova_spark',
   5
 ),
@@ -22,7 +21,6 @@ INSERT INTO users (username, email, password_hash, bio, profile_image, tool_poin
   'pixel_kai',
   'kai@example.com',
   '$2b$10$6ZxyFEk70ZWm/bhoO1UalO7Jkin0MI/OR6Kmw8shtHedbdEgL5xIi',
-  'Musician and sound designer exploring AI audio tools.',
   'https://api.dicebear.com/7.x/pixel-art/svg?seed=pixel_kai',
   -2
 ),
@@ -30,7 +28,6 @@ INSERT INTO users (username, email, password_hash, bio, profile_image, tool_poin
   'dreamer_lux',
   'lux@example.com',
   '$2b$10$pcP1G0JN7abTedu.Fk8f/us2EHBzuXsTTRXT61pZakIYW2kPU97wW',
-  'Writer and world-builder using AI to bring ideas to life.',
   'https://api.dicebear.com/7.x/pixel-art/svg?seed=dreamer_lux',
   0
 );

@@ -1,4 +1,4 @@
-/* ── BREADCRUMB (reused from favourites) ────────────────────────────────── */
+/* Breadcrumb (reused from favourites) */
 
 .fav-breadcrumb {
     display: flex;
@@ -17,7 +17,7 @@
 .breadcrumb-sep        { color: rgba(255,255,255,0.25); }
 .breadcrumb-current    { color: rgba(255,255,255,0.8); font-weight: 500; }
 
-/* ── PROFILE HERO ───────────────────────────────────────────────────────── */
+/* Profile Hero */
 
 .profile-hero {
     background: var(--ink);
@@ -92,17 +92,6 @@
     margin-bottom: 10px;
 }
 
-.profile-bio {
-    font-size: 15px;
-    font-weight: 300;
-    color: rgba(255,255,255,0.6);
-    line-height: 1.7;
-    margin-bottom: 24px;
-    max-width: 520px;
-}
-
-.profile-bio:empty { margin-bottom: 0; }
-
 /* Stats row */
 .profile-stats {
     display: flex;
@@ -145,7 +134,7 @@
 .points-negative { color: var(--accent2) !important; }
 .points-zero     { color: rgba(255,255,255,0.55) !important; }
 
-/* ── SECTION TITLE ──────────────────────────────────────────────────────── */
+/* Section Title */
 
 .section-title {
     font-family: var(--font-head);
@@ -155,7 +144,7 @@
     letter-spacing: -0.01em;
 }
 
-/* ── MY-POSTS CARD OVERRIDE ─────────────────────────────────────────────── */
+/* User's posts card */
 
 /* Show a subtle "your post" badge on each card */
 .post-card.own-post .post-author::after {
@@ -175,7 +164,7 @@
 .post-card-footer .rate-btn  { pointer-events: none; opacity: 0.55; }
 .post-card-footer .hide-btn  { display: none; }
 
-/* ── RESPONSIVE ─────────────────────────────────────────────────────────── */
+/* Responsive */
 
 @media (max-width: 600px) {
     .profile-hero-inner { flex-direction: column; align-items: flex-start; gap: 20px; }

@@ -59,7 +59,7 @@ function jsonResponse(data, status = 200) {
 
 async function serveStaticFile(pathname) {
 
-    if (pathname === "/") pathname = "/index.html";
+    if (pathname === "/") pathname = "/frontpage.html";
 
     const filePath = `./public${pathname}`;
 
@@ -83,7 +83,7 @@ serve(async (req) => {
 
     try {
 
-        // ── REGISTER ─────────────────────────────────────────────────────────────
+        // Register
 
         if (req.method === "POST" && url.pathname === "/api/auth/register") {
             const body = await req.json();
@@ -92,7 +92,7 @@ serve(async (req) => {
             return jsonResponse(user, 201);
         }
 
-        // ── LOGIN ─────────────────────────────────────────────────────────────────
+        // Login
 
         if (req.method === "POST" && url.pathname === "/api/auth/login") {
             const body = await req.json();
@@ -102,7 +102,7 @@ serve(async (req) => {
             return jsonResponse({ token, user });
         }
 
-        // ── GET POSTS ─────────────────────────────────────────────────────────────
+        // Get Posts
 
         if (req.method === "GET" && url.pathname === "/api/posts") {
             const sort   = url.searchParams.get("sort") || "recent";
@@ -112,7 +112,7 @@ serve(async (req) => {
             return jsonResponse(posts);
         }
 
-        // ── CREATE POST ───────────────────────────────────────────────────────────
+        // Create Posts
 
         if (req.method === "POST" && url.pathname === "/api/posts") {
             const user = await authenticate(req);
@@ -125,7 +125,7 @@ serve(async (req) => {
             return jsonResponse(post, 201);
         }
 
-        // ── RATE POST ─────────────────────────────────────────────────────────────
+        // Rate Posts
 
         if (req.method === "POST" && url.pathname === "/api/ratings") {
             const user = await authenticate(req);
@@ -136,7 +136,7 @@ serve(async (req) => {
             return jsonResponse(result);
         }
 
-        // ── HIDE POST ─────────────────────────────────────────────────────────────
+        // Hide Post
 
         if (req.method === "POST" && url.pathname === "/api/hide") {
             const user = await authenticate(req);
@@ -146,7 +146,7 @@ serve(async (req) => {
             return jsonResponse({ message: "Post hidden" });
         }
 
-        // ── FAVOURITES ────────────────────────────────────────────────────────────
+        // Favourites
 
         if (req.method === "GET" && url.pathname === "/api/favourites") {
             const user = await authenticate(req);
@@ -155,7 +155,7 @@ serve(async (req) => {
             return jsonResponse(posts);
         }
 
-        // ── MY RATINGS ────────────────────────────────────────────────────────────
+        // My Ratings
 
         if (req.method === "GET" && url.pathname === "/api/my-ratings") {
             const user = await authenticate(req);
@@ -164,7 +164,7 @@ serve(async (req) => {
             return jsonResponse(ratings);
         }
 
-        // ── MY POSTS ──────────────────────────────────────────────────────────────
+        // My Posts
 
         if (req.method === "GET" && url.pathname === "/api/my-posts") {
             const user = await authenticate(req);
@@ -173,14 +173,14 @@ serve(async (req) => {
             return jsonResponse(posts);
         }
 
-        // ── CATEGORIES ────────────────────────────────────────────────────────────
+        // Catagories
 
         if (req.method === "GET" && url.pathname === "/api/categories") {
             const cats = await getCategories();
             return jsonResponse(cats);
         }
 
-        // ── OWN PROFILE (authenticated) ───────────────────────────────────────────
+        // Own Profile (authenticated)
 
         if (req.method === "GET" && url.pathname === "/api/profile") {
             const user = await authenticate(req);
@@ -189,7 +189,7 @@ serve(async (req) => {
             return jsonResponse(profile);
         }
 
-        // ── PUBLIC USER PROFILE ───────────────────────────────────────────────────
+        // Public Profile
 
         const userMatch = url.pathname.match(/^\/api\/users\/(\d+)$/);
         if (req.method === "GET" && userMatch) {
@@ -199,7 +199,7 @@ serve(async (req) => {
             return jsonResponse(profile);
         }
 
-        // ── PUBLIC USER POSTS ─────────────────────────────────────────────────────
+        // User's Posts For profile
 
         const userPostsMatch = url.pathname.match(/^\/api\/users\/(\d+)\/posts$/);
         if (req.method === "GET" && userPostsMatch) {
@@ -208,7 +208,7 @@ serve(async (req) => {
             return jsonResponse(posts);
         }
 
-        // ── STATIC FILES ──────────────────────────────────────────────────────────
+        // Static Files
 
         if (req.method === "GET") {
             const staticResponse = await serveStaticFile(url.pathname);
