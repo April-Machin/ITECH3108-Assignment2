@@ -1,6 +1,6 @@
 // Redirect if already logged in
 if (localStorage.getItem("token")) {
-    window.location.href = "/index.html";
+    window.location.href = "/frontpage.html";
 }
 
 function switchTab(tab) {
@@ -69,7 +69,7 @@ async function handleLogin() {
         localStorage.setItem("user",  JSON.stringify(data.user));
 
         showMsg("login-msg", "Signed in! Redirecting…", "success");
-        setTimeout(() => window.location.href = "/index.html", 700);
+        setTimeout(() => window.location.href = "/frontpage.html", 700);
 
     } catch {
         showMsg("login-msg", "Could not reach the server. Please try again.", "error");
@@ -126,7 +126,7 @@ async function handleRegister() {
         if (loginRes.ok) {
             localStorage.setItem("token", loginData.token);
             localStorage.setItem("user",  JSON.stringify(loginData.user));
-            setTimeout(() => window.location.href = "/index.html", 900);
+            setTimeout(() => window.location.href = "/frontpage.html", 900);
         } else {
             setTimeout(() => switchTab("login"), 1200);
         }
@@ -141,7 +141,7 @@ async function handleRegister() {
 function continueAsGuest() {
     localStorage.removeItem("token");
     localStorage.removeItem("user");
-    window.location.href = "/index.html";
+    window.location.href = "/frontpage.html";
 }
 
 // Allow Enter key to submit
